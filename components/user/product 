@@ -1,0 +1,97 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+
+export default function ProductCard({ outfit }) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  
+  // Generate random price between $1-$7
+  const randomPrice = (Math.random() * 6 + 1).toFixed(2);
+  const discountPrice = (randomPrice * 0.8).toFixed(2); // 20% discount
+  
+  // Generate random user ID
+  const randomUserId = `user${Math.floor(Math.random() * 10000)}`;
+
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <div className="relative">
+        <img 
+          src={outfit.imageUrl} 
+          alt={outfit.name} 
+          className="w-full h-48 object-cover"
+        />
+        <button 
+          onClick={() => setIsLiked(!isLiked)}
+          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className={`h-6 w-6 ${isLiked ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
+            viewBox="0 0 20 20" 
+            fill="none" 
+            stroke="currentColor"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+            />
+          </svg>
+        </button>
+      </div>
+      
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-1">{outfit.name}</h3>
+        
+        <div className="flex items-center mb-2">
+          <span className="text-gray-500 line-through mr-2">${randomPrice}</span>
+          <span className="text-purple-600 font-bold">${discountPrice}</span>
+          <span className="ml-auto text-sm bg-purple-100 text-purple-800 px-2 py-1 rounded">
+            {Math.floor(Math.random() * 100) + 1} likes
+          </span>
+        </div>
+        
+        <div className="mb-3">
+          <p className="text-sm text-gray-600">
+            {showFullDescription ? outfit.description : `${outfit.description.substring(0, 80)}...`}
+            <button 
+              onClick={() => setShowFullDescription(!showFullDescription)}
+              className="text-purple-600 ml-1 text-sm"
+            >
+              {showFullDescription ? 'Show less' : 'Read more'}
+            </button>
+          </p>
+        </div>
+        
+        <div className="flex items-center mb-3">
+          <div className="flex -space-x-2">
+            {[...Array(3)].map((_, i) => (
+              <img 
+                key={i}
+                src={`https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`}
+                className="w-8 h-8 rounded-full border-2 border-white"
+                alt={`User ${i}`}
+              />
+            ))}
+          </div>
+          <span className="ml-2 text-sm text-gray-600">
+            Loved by {randomUserId} and {Math.floor(Math.random() * 1000)} others
+          </span>
+        </div>
+        
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="w-full bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+        >
+          SHOP NOW
+        </motion.button>
+        
+        <p className="mt-2 text-xs text-center text-gray-500">
+          "{outfit.punchLine || "Look fabulous without breaking the bank!"}"
+        </p>
+      </div>
+    </div>
+  );
+}
